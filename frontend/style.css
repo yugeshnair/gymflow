@@ -50,3 +50,101 @@ body {
 .google-btn:hover {
     background-color: #e5e5e5;
 }
+.dashboard-body {
+    display: block;
+    height: auto;
+    padding: 40px 20px;
+}
+
+.dashboard-container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #b0b0b0;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.suggestion-card {
+    background-color: #1e1e1e;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.suggestion-label {
+    color: #b0b0b0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.suggestion-card h2 {
+    font-size: 32px;
+    color: #4ade80;
+    margin-bottom: 8px;
+}
+
+.suggestion-reason {
+    color: #b0b0b0;
+    font-size: 14px;
+}
+
+.weekly-progress h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.progress-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.day-box {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 10px 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    color: #b0b0b0;
+}
+
+.day-box.done {
+    background-color: #4ade8033;
+    color: #4ade80;
+}
+
+.day-box .muscle {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.log-btn {
+    background-color: #4ade80;
+    color: #121212;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.log-btn:hover {
+    background-color: #3fce70;
+}
