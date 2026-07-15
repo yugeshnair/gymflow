@@ -175,3 +175,51 @@ if (modalCloseBtn && modalOverlay) {
         }
     });
 }
+// ---- HISTORY PAGE ----
+
+const historyList = document.getElementById('history-list');
+
+if (historyList) {
+    const workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+
+    if (workouts.length === 0) {
+        historyList.innerHTML = '<p class="history-empty">No workouts logged yet. Go log your first one!</p>';
+    } else {
+        // Group all entries by date
+        const entriesByDate = {};
+
+        workouts.forEach(function(workout) {
+            if (!entriesByDate[workout.date]) {
+                entriesByDate[workout.date] = [];
+            }
+            entriesByDate[workout.date] = entriesByDate[workout.date].concat(workout.entries);
+        });
+
+        // Sort dates newest first
+        const sortedDates = Object.keys(entriesByDate).sort(function(a, b) {
+            return new Date(b) - new Date(a);
+        });
+
+        sortedDates.forEach(function(dateStr) {
+            const card = document.createElement('div');
+            card.className = 'history-day-card';
+
+            const dateObj = new Date(dateStr);
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+            });
+
+            let itemsHTML = '';
+            entriesByDate[dateStr].forEach(function(entry) {
+                itemsHTML += '<li><strong>' + entry.muscle + '</strong> — ' + entry.exercise + '</li>';
+            });
+
+            card.innerHTML = `
+                <div class="history-date">${formattedDate}</div>
+                <ul>${itemsHTML}</ul>
+            `;
+
+            historyList.appendChild(card);
+        });
+    }
+}

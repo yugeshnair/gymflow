@@ -333,3 +333,51 @@ body {
     text-align: center;
     padding: 20px 0;
 }
+.history-day-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+}
+
+.history-day-card .history-date {
+    font-size: 13px;
+    color: #4ade80;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-day-card ul {
+    list-style: none;
+}
+
+.history-day-card li {
+    font-size: 14px;
+    color: #f5f5f5;
+    padding: 4px 0;
+}
+
+.history-day-card li strong {
+    color: #4ade80;
+}
+
+.history-empty {
+    color: #b0b0b0;
+    text-align: center;
+    padding: 40px 0;
+    font-size: 14px;
+}
+.history-link {
+    display: block;
+    text-align: center;
+    color: #b0b0b0;
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.history-link:hover {
+    color: #4ade80;
+}
