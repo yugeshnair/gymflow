@@ -1,5 +1,9 @@
 // ---- LOG WORKOUT PAGE ----
 
+// ---- LOG WORKOUT PAGE ----
+
+// ---- LOG WORKOUT PAGE ----
+
 const addExerciseBtn = document.getElementById('add-exercise-btn');
 const exerciseList = document.getElementById('exercise-list');
 let exerciseRowCount = 1;
@@ -29,10 +33,32 @@ if (addExerciseBtn) {
                 <option value="Core">Core</option>
                 <option value="Cardio">Cardio</option>
                 <option value="Endurance">Endurance</option>
+                <option value="Others">Others</option>
             </select>
+            <input type="text" class="custom-muscle-input" name="custom-muscle-${exerciseRowCount}" placeholder="Specify muscle" autocomplete="off" style="display:none;">
             <input type="text" class="exercise-input" name="exercise-${exerciseRowCount}" placeholder="e.g. Bench Press" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>
         `;
         exerciseList.appendChild(newRow);
+    });
+}
+
+// Show/hide the "specify muscle" field whenever ANY dropdown changes
+// (event delegation: one listener on the container handles all rows, even future ones)
+if (exerciseList) {
+    exerciseList.addEventListener('change', function(event) {
+        if (event.target.classList.contains('muscle-select')) {
+            const row = event.target.closest('.exercise-row');
+            const customInput = row.querySelector('.custom-muscle-input');
+
+            if (event.target.value === 'Others') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
     });
 }
 
@@ -46,8 +72,14 @@ if (logForm) {
         const rows = document.querySelectorAll('.exercise-row');
 
         rows.forEach(function(row) {
-            const muscle = row.querySelector('.muscle-select').value;
+            let muscle = row.querySelector('.muscle-select').value;
             const exercise = row.querySelector('.exercise-input').value;
+
+            if (muscle === 'Others') {
+                const customValue = row.querySelector('.custom-muscle-input').value;
+                muscle = customValue || 'Others';
+            }
+
             entries.push({ muscle: muscle, exercise: exercise });
         });
 
@@ -178,6 +210,7 @@ if (modalCloseBtn && modalOverlay) {
 // ---- HISTORY PAGE ----
 
 const historyList = document.getElementById('history-list');
+const dateFilter = document.getElementById('date-filter');
 
 if (historyList) {
     const workouts = JSON.parse(localStorage.getItem('workouts')) || [];
@@ -185,7 +218,6 @@ if (historyList) {
     if (workouts.length === 0) {
         historyList.innerHTML = '<p class="history-empty">No workouts logged yet. Go log your first one!</p>';
     } else {
-        // Group all entries by date
         const entriesByDate = {};
 
         workouts.forEach(function(workout) {
@@ -195,31 +227,89 @@ if (historyList) {
             entriesByDate[workout.date] = entriesByDate[workout.date].concat(workout.entries);
         });
 
-        // Sort dates newest first
         const sortedDates = Object.keys(entriesByDate).sort(function(a, b) {
             return new Date(b) - new Date(a);
         });
 
-        sortedDates.forEach(function(dateStr) {
-            const card = document.createElement('div');
-            card.className = 'history-day-card';
-
+        function formatDate(dateStr) {
             const dateObj = new Date(dateStr);
-            const formattedDate = dateObj.toLocaleDateString('en-US', {
+            return dateObj.toLocaleDateString('en-US', {
                 weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
             });
+        }
 
-            let itemsHTML = '';
-            entriesByDate[dateStr].forEach(function(entry) {
-                itemsHTML += '<li><strong>' + entry.muscle + '</strong> — ' + entry.exercise + '</li>';
-            });
+        // Build the summary cards
+        sortedDates.forEach(function(dateStr) {
+            const card = document.createElement('div');
+            card.className = 'history-summary-card';
+
+            const count = entriesByDate[dateStr].length;
 
             card.innerHTML = `
-                <div class="history-date">${formattedDate}</div>
-                <ul>${itemsHTML}</ul>
+                <div class="summary-info">
+                    <div class="summary-date">${formatDate(dateStr)}</div>
+                    <div class="summary-count">${count} ${count === 1 ? 'exercise' : 'exercises'}</div>
+                </div>
+                <button class="see-more-btn" data-date="${dateStr}">See More</button>
             `;
 
             historyList.appendChild(card);
         });
+
+        // Build the filter dropdown options
+        if (dateFilter) {
+            sortedDates.forEach(function(dateStr) {
+                const option = document.createElement('option');
+                option.value = dateStr;
+                option.textContent = formatDate(dateStr);
+                dateFilter.appendChild(option);
+            });
+
+            dateFilter.addEventListener('change', function() {
+                if (dateFilter.value) {
+                    openHistoryModal(dateFilter.value, formatDate(dateFilter.value), entriesByDate[dateFilter.value]);
+                }
+            });
+        }
+
+        // "See More" buttons (event delegation, same pattern as before)
+        historyList.addEventListener('click', function(event) {
+            if (event.target.classList.contains('see-more-btn')) {
+                const dateStr = event.target.getAttribute('data-date');
+                openHistoryModal(dateStr, formatDate(dateStr), entriesByDate[dateStr]);
+            }
+        });
     }
+}
+
+function openHistoryModal(dateKey, dateLabel, entries) {
+    const modal = document.getElementById('day-modal');
+    const title = document.getElementById('modal-day-title');
+    const list = document.getElementById('modal-exercise-list');
+
+    title.textContent = dateLabel;
+    list.innerHTML = '';
+
+    entries.forEach(function(entry) {
+        const li = document.createElement('li');
+        li.innerHTML = '<strong>' + entry.muscle + '</strong> — ' + entry.exercise;
+        list.appendChild(li);
+    });
+
+    modal.classList.add('open');
+}
+
+const historyModalCloseBtn = document.getElementById('modal-close-btn');
+const historyModalOverlay = document.getElementById('day-modal');
+
+if (historyModalCloseBtn && historyModalOverlay && historyList) {
+    historyModalCloseBtn.addEventListener('click', function() {
+        historyModalOverlay.classList.remove('open');
+    });
+
+    historyModalOverlay.addEventListener('click', function(event) {
+        if (event.target === historyModalOverlay) {
+            historyModalOverlay.classList.remove('open');
+        }
+    });
 }

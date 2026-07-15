@@ -381,3 +381,69 @@ body {
 .history-link:hover {
     color: #4ade80;
 }
+.exercise-row {
+    flex-wrap: wrap;
+}
+
+.custom-muscle-input {
+    flex: 1;
+    background-color: #1e1e1e;
+    border: 1px solid #4ade80;
+    border-radius: 8px;
+    padding: 12px;
+    color: #f5f5f5;
+    font-size: 14px;
+}
+.filter-label {
+    display: block;
+    font-size: 13px;
+    color: #b0b0b0;
+    margin-bottom: 6px;
+}
+
+#date-filter {
+    width: 100%;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    color: #f5f5f5;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.history-summary-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-summary-card .summary-info .summary-date {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.history-summary-card .summary-info .summary-count {
+    font-size: 12px;
+    color: #4ade80;
+}
+
+.see-more-btn {
+    background-color: transparent;
+    border: 1px solid #4ade80;
+    color: #4ade80;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.see-more-btn:hover {
+    background-color: #4ade8022;
+}
