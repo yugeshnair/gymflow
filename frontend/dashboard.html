@@ -22,38 +22,51 @@
         <section class="weekly-progress">
             <h3>This Week</h3>
             <div class="progress-grid">
-                <div class="day-box done">
-                    <span>Mon</span>
-                    <span class="muscle">Chest</span>
-                </div>
-                <div class="day-box done">
-                    <span>Tue</span>
-                    <span class="muscle">Back</span>
-                </div>
-                <div class="day-box">
-                    <span>Wed</span>
-                    <span class="muscle">—</span>
-                </div>
-                <div class="day-box">
-                    <span>Thu</span>
-                    <span class="muscle">—</span>
-                </div>
-                <div class="day-box">
-                    <span>Fri</span>
-                    <span class="muscle">—</span>
-                </div>
-                <div class="day-box">
-                    <span>Sat</span>
-                    <span class="muscle">—</span>
-                </div>
-                <div class="day-box">
-                    <span>Sun</span>
-                    <span class="muscle">—</span>
-                </div>
-            </div>
+    <div class="day-box" id="box-mon">
+        <span>Mon</span>
+        <span class="muscle" id="muscle-mon">—</span>
+    </div>
+    <div class="day-box" id="box-tue">
+        <span>Tue</span>
+        <span class="muscle" id="muscle-tue">—</span>
+    </div>
+    <div class="day-box" id="box-wed">
+        <span>Wed</span>
+        <span class="muscle" id="muscle-wed">—</span>
+    </div>
+    <div class="day-box" id="box-thu">
+        <span>Thu</span>
+        <span class="muscle" id="muscle-thu">—</span>
+    </div>
+    <div class="day-box" id="box-fri">
+        <span>Fri</span>
+        <span class="muscle" id="muscle-fri">—</span>
+    </div>
+    <div class="day-box" id="box-sat">
+        <span>Sat</span>
+        <span class="muscle" id="muscle-sat">—</span>
+    </div>
+    <div class="day-box" id="box-sun">
+        <span>Sun</span>
+        <span class="muscle" id="muscle-sun">—</span>
+    </div>
+    <div class="modal-overlay" id="day-modal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 id="modal-day-title">Monday</h2>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <ul class="modal-exercise-list" id="modal-exercise-list">
+        </ul>
+    </div>
+</div>
+</div>
         </section>
 
-        <button class="log-btn">+ Log Workout</button>
+        
+        <a href="log-workout.html" class="log-btn">+ Log Workout</a>
     </div>
-</body>
+    </div>
+    <script src="script.js"></script>
+    </body>
 </html>
