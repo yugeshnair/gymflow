@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymFlow - Login</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="login-container">
         <h1>GymFlow</h1>
         <p>Track your workouts. Hit your weekly goals. Train smarter.</p>
-        <button class="google-btn">Sign in with Google</button>
+       <div id="g_id_onload"
+     data-client_id="479738025259-47qk8q4803b04806d2l0g86i6sd20mb9.apps.googleusercontent.com"
+     data-callback="handleGoogleSignIn">
+</div>
+<div class="g_id_signin" data-type="standard" data-theme="filled_black" data-size="large" data-width="300"></div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>

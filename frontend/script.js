@@ -1,5 +1,31 @@
 
 
+// ---- LOGIN PAGE ----
+
+function handleGoogleSignIn(response) {
+    const idToken = response.credential;
+
+    fetch('http://127.0.0.1:5001/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token: idToken })
+    })
+    .then(function(res) {
+        if (!res.ok) {
+            throw new Error('Login failed');
+        }
+        return res.json();
+    })
+    .then(function(data) {
+        localStorage.setItem('gymflow_user', JSON.stringify(data));
+        window.location.href = 'dashboard.html';
+    })
+    .catch(function(error) {
+        console.error('Login error:', error);
+        alert('Login failed. Please try again.');
+    });
+}
+
 // ---- LOG WORKOUT PAGE ----
 
 const addExerciseBtn = document.getElementById('add-exercise-btn');
