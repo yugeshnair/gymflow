@@ -68,8 +68,12 @@ if (logForm) {
     logForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const entries = [];
+        const date = document.getElementById('date').value;
+        const duration = document.getElementById('duration').value;
+        const notes = document.getElementById('notes').value;
         const rows = document.querySelectorAll('.exercise-row');
+
+        const savePromises = [];
 
         rows.forEach(function(row) {
             let muscle = row.querySelector('.muscle-select').value;
@@ -80,22 +84,37 @@ if (logForm) {
                 muscle = customValue || 'Others';
             }
 
-            entries.push({ muscle: muscle, exercise: exercise });
+            const workoutData = {
+                date: date,
+                muscle: muscle,
+                exercise: exercise,
+                duration: duration,
+                notes: notes
+            };
+
+            const savePromise = fetch('http://127.0.0.1:5001/workouts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(workoutData)
+}).then(function(response) {
+    if (!response.ok) {
+        throw new Error('Server responded with status ' + response.status);
+    }
+    return response.json();
+});
+
+savePromises.push(savePromise);
         });
-
-        const workout = {
-            date: document.getElementById('date').value,
-            entries: entries,
-            duration: document.getElementById('duration').value,
-            notes: document.getElementById('notes').value
-        };
-
-        const existingWorkouts = JSON.parse(localStorage.getItem('workouts')) || [];
-        existingWorkouts.push(workout);
-        localStorage.setItem('workouts', JSON.stringify(existingWorkouts));
-
-        alert('Workout saved!');
-        window.location.href = 'dashboard.html';
+console.log('Sending workout data:', document.querySelectorAll('.exercise-row'));
+        Promise.all(savePromises)
+            .then(function() {
+                alert('Workout saved!');
+                window.location.href = 'dashboard.html';
+            })
+            .catch(function(error) {
+                console.error('Error saving workout:', error);
+                alert('Something went wrong saving your workout. Check the console for details.');
+            });
     });
 }
 
