@@ -5,7 +5,7 @@
 function handleGoogleSignIn(response) {
     const idToken = response.credential;
 
-    fetch('http://127.0.0.1:5001/auth/google', {
+    fetch('/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_token: idToken })
@@ -97,6 +97,7 @@ if (logForm) {
         const notes = document.getElementById('notes').value;
         const rows = document.querySelectorAll('.exercise-row');
 
+        const storedUser = JSON.parse(localStorage.getItem('gymflow_user'));
         const savePromises = [];
 
         rows.forEach(function(row) {
@@ -107,16 +108,16 @@ if (logForm) {
                 const customValue = row.querySelector('.custom-muscle-input').value;
                 muscle = customValue || 'Others';
             }
+const workoutData = {
+    user_id: storedUser.id,
+    date: date,
+    muscle: muscle,
+    exercise: exercise,
+    duration: duration,
+    notes: notes
+};
 
-            const workoutData = {
-                date: date,
-                muscle: muscle,
-                exercise: exercise,
-                duration: duration,
-                notes: notes
-            };
-
-            const savePromise = fetch('http://127.0.0.1:5001/workouts', {
+           const savePromise = fetch('/workouts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(workoutData)
@@ -149,7 +150,7 @@ console.log('Sending workout data:', document.querySelectorAll('.exercise-row'))
 const progressGrid = document.querySelector('.progress-grid');
 
 if (progressGrid) {
-    fetch('http://127.0.0.1:5001/workouts')
+    fetch('/workouts')
         .then(function(response) {
             if (!response.ok) {
                 throw new Error('Server responded with status ' + response.status);
@@ -271,7 +272,7 @@ const historyList = document.getElementById('history-list');
 const dateFilter = document.getElementById('date-filter');
 
 if (historyList) {
-    fetch('http://127.0.0.1:5001/workouts')
+    fetch('/workouts')
         .then(function(response) {
             if (!response.ok) {
                 throw new Error('Server responded with status ' + response.status);
@@ -395,7 +396,7 @@ if (modalExerciseList) {
             const entryId = event.target.getAttribute('data-id');
 
             if (confirm('Delete this exercise entry?')) {
-                fetch('http://127.0.0.1:5001/workouts/' + entryId, {
+                fetch('/workouts/' + entryId, {
                     method: 'DELETE'
                 })
                 .then(function(response) {
@@ -416,7 +417,7 @@ if (modalExerciseList) {
 
 function reloadAllData() {
     if (progressGrid) {
-        fetch('http://127.0.0.1:5001/workouts')
+        fetch('/workouts')
             .then(function(response) { return response.json(); })
             .then(function(workouts) { renderDashboard(workouts); });
     }
@@ -426,7 +427,7 @@ function reloadAllData() {
         if (dateFilter) {
             dateFilter.innerHTML = '<option value="">All dates</option>';
         }
-        fetch('http://127.0.0.1:5001/workouts')
+       fetch('/workouts')
             .then(function(response) { return response.json(); })
             .then(function(workouts) { renderHistory(workouts); });
     }
