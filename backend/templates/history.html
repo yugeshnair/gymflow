@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymFlow - History</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
+        <header class="dashboard-header">
+            <h1>History</h1>
+            <p class="subtitle">Everything you've logged so far</p>
+        </header>
+
+        <label for="date-filter" class="filter-label">Jump to a date</label>
+        <select id="date-filter">
+            <option value="">All dates</option>
+        </select>
+
+        <div id="history-list"></div>
+    </div>
+
+    <div class="modal-overlay" id="day-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modal-day-title">Monday</h2>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <ul class="modal-exercise-list" id="modal-exercise-list">
+            </ul>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -68,8 +68,23 @@ def google_auth():
     return jsonify(user.to_dict()), 200
 
 @app.route('/')
-def home():
-    return 'GymFlow backend is running!'
+def login_page():
+    return render_template('index.html')
+
+
+@app.route('/dashboard.html')
+def dashboard_page():
+    return render_template('dashboard.html')
+
+
+@app.route('/log-workout.html')
+def log_workout_page():
+    return render_template('log-workout.html')
+
+
+@app.route('/history.html')
+def history_page():
+    return render_template('history.html')
 
 
 @app.route('/workouts', methods=['GET'])
