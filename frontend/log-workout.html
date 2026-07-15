@@ -19,29 +19,31 @@
     <input type="date" id="date" name="date" required>
 
     <label>Exercises</label>
+<div id="exercise-list">
     <div class="exercise-row">
-    <select class="muscle-select" name="muscle-1" required>
-        <option value="">Muscle group</option>
-        <option value="Chest">Chest</option>
-        <option value="Upper Chest">Upper Chest</option>
-        <option value="Lower Chest">Lower Chest</option>
-        <option value="Back">Back</option>
-        <option value="Lats">Lats</option>
-        <option value="Legs">Legs</option>
-        <option value="Quads">Quads</option>
-        <option value="Hamstrings">Hamstrings</option>
-        <option value="Glutes">Glutes</option>
-        <option value="Shoulders">Shoulders</option>
-        <option value="Arms">Arms</option>
-        <option value="Biceps">Biceps</option>
-        <option value="Triceps">Triceps</option>
-        <option value="Core">Core</option>
-        <option value="Cardio">Cardio</option>
-        <option value="Endurance">Endurance</option>
-        <option value="Others">Others</option>
-    </select>
-    <input type="text" class="custom-muscle-input" name="custom-muscle-1" placeholder="Specify muscle" autocomplete="off" style="display:none;">
-    <input type="text" class="exercise-input" name="exercise-1" placeholder="e.g. Bench Press" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>
+        <select class="muscle-select" name="muscle-1" required>
+            <option value="">Muscle group</option>
+            <option value="Chest">Chest</option>
+            <option value="Upper Chest">Upper Chest</option>
+            <option value="Lower Chest">Lower Chest</option>
+            <option value="Back">Back</option>
+            <option value="Lats">Lats</option>
+            <option value="Legs">Legs</option>
+            <option value="Quads">Quads</option>
+            <option value="Hamstrings">Hamstrings</option>
+            <option value="Glutes">Glutes</option>
+            <option value="Shoulders">Shoulders</option>
+            <option value="Arms">Arms</option>
+            <option value="Biceps">Biceps</option>
+            <option value="Triceps">Triceps</option>
+            <option value="Core">Core</option>
+            <option value="Cardio">Cardio</option>
+            <option value="Endurance">Endurance</option>
+            <option value="Others">Others</option>
+        </select>
+        <input type="text" class="custom-muscle-input" name="custom-muscle-1" placeholder="Specify muscle" autocomplete="off" style="display:none;">
+        <input type="text" class="exercise-input" name="exercise-1" placeholder="e.g. Bench Press" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>
+    </div>
 </div>
 
     <button type="button" id="add-exercise-btn" class="add-btn">+ Add Exercise</button>

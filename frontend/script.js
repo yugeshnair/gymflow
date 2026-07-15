@@ -1,6 +1,4 @@
-// ---- LOG WORKOUT PAGE ----
 
-// ---- LOG WORKOUT PAGE ----
 
 // ---- LOG WORKOUT PAGE ----
 
@@ -120,11 +118,27 @@ console.log('Sending workout data:', document.querySelectorAll('.exercise-row'))
 
 /// ---- DASHBOARD PAGE ----
 
+// ---- DASHBOARD PAGE ----
+
 const progressGrid = document.querySelector('.progress-grid');
 
 if (progressGrid) {
-    const workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+    fetch('http://127.0.0.1:5001/workouts')
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Server responded with status ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function(workouts) {
+            renderDashboard(workouts);
+        })
+        .catch(function(error) {
+            console.error('Error loading workouts:', error);
+        });
+}
 
+function renderDashboard(workouts) {
     const dayMap = {
         0: 'sun', 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri', 6: 'sat'
     };
@@ -157,7 +171,7 @@ if (progressGrid) {
             if (!entriesByDay[dayOfWeek]) {
                 entriesByDay[dayOfWeek] = [];
             }
-            entriesByDay[dayOfWeek] = entriesByDay[dayOfWeek].concat(workout.entries);
+          entriesByDay[dayOfWeek].push({ id: workout.id, muscle: workout.muscle, exercise: workout.exercise });
         }
     });
 
@@ -180,7 +194,6 @@ if (progressGrid) {
                 muscleLabel.classList.remove('tag-count');
             }
 
-            // Click handler to open the modal for this day
             box.addEventListener('click', function() {
                 openDayModal(day, dayFullNames[day], entriesByDay[day] || []);
             });
@@ -232,74 +245,87 @@ const historyList = document.getElementById('history-list');
 const dateFilter = document.getElementById('date-filter');
 
 if (historyList) {
-    const workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+    fetch('http://127.0.0.1:5001/workouts')
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Server responded with status ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function(workouts) {
+            renderHistory(workouts);
+        })
+        .catch(function(error) {
+            console.error('Error loading history:', error);
+        });
+}
 
+function renderHistory(workouts) {
     if (workouts.length === 0) {
         historyList.innerHTML = '<p class="history-empty">No workouts logged yet. Go log your first one!</p>';
-    } else {
-        const entriesByDate = {};
+        return;
+    }
 
-        workouts.forEach(function(workout) {
-            if (!entriesByDate[workout.date]) {
-                entriesByDate[workout.date] = [];
-            }
-            entriesByDate[workout.date] = entriesByDate[workout.date].concat(workout.entries);
-        });
+    const entriesByDate = {};
 
-        const sortedDates = Object.keys(entriesByDate).sort(function(a, b) {
-            return new Date(b) - new Date(a);
-        });
-
-        function formatDate(dateStr) {
-            const dateObj = new Date(dateStr);
-            return dateObj.toLocaleDateString('en-US', {
-                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-            });
+    workouts.forEach(function(workout) {
+        if (!entriesByDate[workout.date]) {
+            entriesByDate[workout.date] = [];
         }
+       entriesByDate[workout.date].push({ id: workout.id, muscle: workout.muscle, exercise: workout.exercise });
+    });
 
-        // Build the summary cards
+    const sortedDates = Object.keys(entriesByDate).sort(function(a, b) {
+        return new Date(b) - new Date(a);
+    });
+
+    function formatDate(dateStr) {
+        const dateObj = new Date(dateStr);
+        return dateObj.toLocaleDateString('en-US', {
+            weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+        });
+    }
+
+    sortedDates.forEach(function(dateStr) {
+        const card = document.createElement('div');
+        card.className = 'history-summary-card';
+
+        const count = entriesByDate[dateStr].length;
+
+        card.innerHTML = `
+            <div class="summary-info">
+                <div class="summary-date">${formatDate(dateStr)}</div>
+                <div class="summary-count">${count} ${count === 1 ? 'exercise' : 'exercises'}</div>
+            </div>
+            <button class="see-more-btn" data-date="${dateStr}">See More</button>
+        `;
+
+        historyList.appendChild(card);
+    });
+
+    if (dateFilter) {
         sortedDates.forEach(function(dateStr) {
-            const card = document.createElement('div');
-            card.className = 'history-summary-card';
-
-            const count = entriesByDate[dateStr].length;
-
-            card.innerHTML = `
-                <div class="summary-info">
-                    <div class="summary-date">${formatDate(dateStr)}</div>
-                    <div class="summary-count">${count} ${count === 1 ? 'exercise' : 'exercises'}</div>
-                </div>
-                <button class="see-more-btn" data-date="${dateStr}">See More</button>
-            `;
-
-            historyList.appendChild(card);
+            const option = document.createElement('option');
+            option.value = dateStr;
+            option.textContent = formatDate(dateStr);
+            dateFilter.appendChild(option);
         });
 
-        // Build the filter dropdown options
-        if (dateFilter) {
-            sortedDates.forEach(function(dateStr) {
-                const option = document.createElement('option');
-                option.value = dateStr;
-                option.textContent = formatDate(dateStr);
-                dateFilter.appendChild(option);
-            });
-
-            dateFilter.addEventListener('change', function() {
-                if (dateFilter.value) {
-                    openHistoryModal(dateFilter.value, formatDate(dateFilter.value), entriesByDate[dateFilter.value]);
-                }
-            });
-        }
-
-        // "See More" buttons (event delegation, same pattern as before)
-        historyList.addEventListener('click', function(event) {
-            if (event.target.classList.contains('see-more-btn')) {
-                const dateStr = event.target.getAttribute('data-date');
-                openHistoryModal(dateStr, formatDate(dateStr), entriesByDate[dateStr]);
+        dateFilter.addEventListener('change', function() {
+            if (dateFilter.value) {
+                openHistoryModal(dateFilter.value, formatDate(dateFilter.value), entriesByDate[dateFilter.value]);
             }
         });
     }
+
+    historyList.addEventListener('click', function(event) {
+        if (event.target.classList.contains('see-more-btn')) {
+            const dateStr = event.target.getAttribute('data-date');
+            openHistoryModal(dateStr, formatDate(dateStr), entriesByDate[dateStr]);
+        }
+    });
 }
+// ---- HISTORY MODAL LOGIC ----
 
 function openHistoryModal(dateKey, dateLabel, entries) {
     const modal = document.getElementById('day-modal');
@@ -311,7 +337,8 @@ function openHistoryModal(dateKey, dateLabel, entries) {
 
     entries.forEach(function(entry) {
         const li = document.createElement('li');
-        li.innerHTML = '<strong>' + entry.muscle + '</strong> — ' + entry.exercise;
+        li.innerHTML = '<strong>' + entry.muscle + '</strong> — ' + entry.exercise +
+            ' <button class="delete-entry-btn" data-id="' + entry.id + '">Delete</button>';
         list.appendChild(li);
     });
 
@@ -331,4 +358,50 @@ if (historyModalCloseBtn && historyModalOverlay && historyList) {
             historyModalOverlay.classList.remove('open');
         }
     });
+}
+// ---- DELETE WORKOUT ENTRY ----
+
+const modalExerciseList = document.getElementById('modal-exercise-list');
+
+if (modalExerciseList) {
+    modalExerciseList.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-entry-btn')) {
+            const entryId = event.target.getAttribute('data-id');
+
+            if (confirm('Delete this exercise entry?')) {
+                fetch('http://127.0.0.1:5001/workouts/' + entryId, {
+                    method: 'DELETE'
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete');
+                    }
+                    event.target.closest('li').remove();
+                })
+                .catch(function(error) {
+                    console.error('Error deleting workout:', error);
+                    alert('Could not delete. Please try again.');
+                });
+            }
+        }
+    });
+}
+// ---- RELOAD ALL DATA ----
+
+function reloadAllData() {
+    if (progressGrid) {
+        fetch('http://127.0.0.1:5001/workouts')
+            .then(function(response) { return response.json(); })
+            .then(function(workouts) { renderDashboard(workouts); });
+    }
+
+    if (historyList) {
+        historyList.innerHTML = '';
+        if (dateFilter) {
+            dateFilter.innerHTML = '<option value="">All dates</option>';
+        }
+        fetch('http://127.0.0.1:5001/workouts')
+            .then(function(response) { return response.json(); })
+            .then(function(workouts) { renderHistory(workouts); });
+    }
 }

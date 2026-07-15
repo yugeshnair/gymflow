@@ -57,6 +57,17 @@ def add_workout():
 
     return jsonify(new_workout.to_dict()), 201
 
+@app.route('/workouts/<int:workout_id>', methods=['DELETE'])
+def delete_workout(workout_id):
+    workout = Workout.query.get(workout_id)
+
+    if workout is None:
+        return jsonify({'error': 'Workout not found'}), 404
+
+    db.session.delete(workout)
+    db.session.commit()
+
+    return jsonify({'message': 'Workout deleted'}), 200
 
 if __name__ == '__main__':
     with app.app_context():
