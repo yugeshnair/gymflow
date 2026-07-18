@@ -150,8 +150,14 @@ console.log('Sending workout data:', document.querySelectorAll('.exercise-row'))
 const progressGrid = document.querySelector('.progress-grid');
 
 if (progressGrid) {
-    fetch('/workouts')
-        .then(function(response) {
+    const storedUser = JSON.parse(localStorage.getItem('gymflow_user'));
+    const userId = storedUser ? storedUser.id : null;
+
+    if (!userId) {
+        window.location.href = 'index.html';
+    } else {
+        fetch('/workouts?user_id=' + userId)
+            .then(function(response) {
             if (!response.ok) {
                 throw new Error('Server responded with status ' + response.status);
             }
@@ -160,9 +166,10 @@ if (progressGrid) {
         .then(function(workouts) {
             renderDashboard(workouts);
         })
-        .catch(function(error) {
+       .catch(function(error) {
             console.error('Error loading workouts:', error);
         });
+    }
 }
 
 function renderDashboard(workouts) {
@@ -271,20 +278,27 @@ if (modalCloseBtn && modalOverlay) {
 const historyList = document.getElementById('history-list');
 const dateFilter = document.getElementById('date-filter');
 
-if (historyList) {
-    fetch('/workouts')
-        .then(function(response) {
-            if (!response.ok) {
-                throw new Error('Server responded with status ' + response.status);
-            }
-            return response.json();
-        })
-        .then(function(workouts) {
-            renderHistory(workouts);
-        })
-        .catch(function(error) {
-            console.error('Error loading history:', error);
-        });
+iif (historyList) {
+    const storedUser = JSON.parse(localStorage.getItem('gymflow_user'));
+    const userId = storedUser ? storedUser.id : null;
+
+    if (!userId) {
+        window.location.href = 'index.html';
+    } else {
+        fetch('/workouts?user_id=' + userId)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Server responded with status ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(workouts) {
+                renderHistory(workouts);
+            })
+            .catch(function(error) {
+                console.error('Error loading history:', error);
+            });
+    }
 }
 
 function renderHistory(workouts) {

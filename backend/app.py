@@ -89,8 +89,14 @@ def history_page():
 
 @app.route('/workouts', methods=['GET'])
 def get_workouts():
-    all_workouts = Workout.query.all()
-    return jsonify([w.to_dict() for w in all_workouts])
+    user_id = request.args.get('user_id')
+
+    if user_id:
+        workouts = Workout.query.filter_by(user_id=user_id).all()
+    else:
+        workouts = Workout.query.all()
+
+    return jsonify([w.to_dict() for w in workouts])
 
 
 @app.route('/workouts', methods=['POST'])
