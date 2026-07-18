@@ -278,7 +278,7 @@ if (modalCloseBtn && modalOverlay) {
 const historyList = document.getElementById('history-list');
 const dateFilter = document.getElementById('date-filter');
 
-iif (historyList) {
+if (historyList) {
     const storedUser = JSON.parse(localStorage.getItem('gymflow_user'));
     const userId = storedUser ? storedUser.id : null;
 
